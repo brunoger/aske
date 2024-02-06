@@ -157,11 +157,11 @@ def extract_proper_names(text):
         for i in range(len(tagged_words)):
             word, tag = tagged_words[i]
 
-            # Verifica se a palavra está toda em maiúsculas e não é um verbo
-            if word.isupper() and 'VB' not in tag:
+            # Verifica se a palavra está toda em maiúsculas, não é um verbo e que não seja um número
+            if word.isupper() and 'VB' not in tag and word.isalpha():
               proper_names.append(word)
-            # Verifica se a primeira letra é maiúscula e as demais são minúsculas, e não é um verbo
-            elif word[0].isupper() and word[1:].islower() and 'VB' not in tag:
+            # Verifica se a primeira letra é maiúscula e as demais são minúsculas, não é um verbo e que não seja um número
+            elif word[0].isupper() and word[1:].islower() and 'VB' not in tag and word.isalpha():
               proper_names.append(word)
 
     return proper_names
