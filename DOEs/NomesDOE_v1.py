@@ -1,10 +1,13 @@
+import PyPDF2
 import fitz  # PyMuPDF
 import re
 import nltk
 import requests
 from datetime import datetime, timedelta
 from concurrent.futures import ThreadPoolExecutor
+#from nltk.corpus import names
 import os
+#import spacy
 
 #Criar pasta de Diários Oficiais do Estado
 if '/content/DOEs' not in '/content':
@@ -100,8 +103,8 @@ if not os.path.exists(pdf_directory):
 # Nome do arquivo PDF de saída combinado
 combined_pdf_filename = 'combined_does.pdf'
 
-# Lista para armazenar os caminhos completos dos arquivos PDF individuais
-pdf_files = [os.path.join(pdf_directory, pdf_file) for pdf_file in os.listdir(pdf_directory) if pdf_file.endswith('.pdf')]
+# Lista os arquivos PDF no diretório e ordena-os por nome
+pdf_files = sorted([os.path.join(pdf_directory, pdf_file) for pdf_file in os.listdir(pdf_directory) if pdf_file.endswith('.pdf')])
 
 if not pdf_files:
     print("Nenhum arquivo PDF encontrado no diretório.")
@@ -143,6 +146,11 @@ def extract_text_from_pdf(pdf_path):
     except Exception as e:
         print(f"Erro ao extrair texto do PDF: {e}")
         return None
+
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
+#nltk.download('names')
+#nlp = spacy.load("pt_core_news_sm")
 
 # Função para extrair nomes próprios de um texto
 def extract_proper_names(text):
