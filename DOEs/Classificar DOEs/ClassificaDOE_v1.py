@@ -1,3 +1,5 @@
+#Baixa o último DOE e extrai todas as palavras maiúsculas e sem número.
+
 from io import BytesIO
 import fitz  # PyMuPDF
 import PyPDF2
