@@ -1,6 +1,12 @@
 import PyPDF2 #instalar com pip
 import pdfpumbler # instalar com pip
 
+class Data: Informações sobre data encontrada num DOE
+  def __init__(self, dia, doc, pag, frase):
+    self.dia = dia
+    self.doc = doc
+    self.pag = pag
+    self.frase = frase
 
 #Busca por datas por extenso e resumida alocando em um vetor com todas as datas e identificação da data por documento
 def find_date(pdf_files, datas):
@@ -67,6 +73,7 @@ def find_date(pdf_files, datas):
 
   return datas
 
+#Extrai palavras em negrito de um PDF e separa órgãos caso estejam concatenados a qualquer outra palavras
 def palavras_negrito(pdf_files):
   palavrasnegrito = []
   temp=''
