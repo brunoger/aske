@@ -59,12 +59,13 @@ def find_date(pdf_files, datas):
               if(TOKEN[j][C].isnumeric()):
                 C+=1
                 N+=1
-              elif(TOKEN[j][C]=='.' and N%3!=0):
+              elif(TOKEN[j][C]=='.' and N==2):
                 C+=1
-                N+=1
+              elif(TOKEN[j][C]=='.' and N==4):
+                C+=1
               else:
                 TOKEN[j] = TOKEN[j].replace(TOKEN[j][C],'')
-            if(N==10):
+            if(N==8 and C==10):
               datas.append(TOKEN[j])
               pdf_files = pdf_files.replace('/content/DOEs/','')
               datas[-1] = Data(datas[-1], pdf_files, i, S)  
