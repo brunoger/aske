@@ -1,6 +1,6 @@
 #Vinícius
 import PyPDF2 #instalar com pip
-import pdfpumbler #instalar com pip
+import pdfplumber #instalar com pip
 import requests
 import time
 from datetime import datetime, timedelta
