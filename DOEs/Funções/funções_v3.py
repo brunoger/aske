@@ -1,5 +1,8 @@
 import PyPDF2 #instalar com pip (FORA DE USO)
 import pdfpumbler # instalar com pip
+import nltk
+nltk.download('all')
+from nltk import *
 
 class Data: #Informações sobre data encontrada num DOE
   def __init__(self, dia, doc, pag, frase):
