@@ -4,6 +4,7 @@ from DownloadDOEs import *
 
 print('\nInício do código\n')
 
+#Cria uma pasta com o nome especificado e baixa os Diários Oficiais do Estado até número especificado dias atrás
 Baixar_DOEs('DOEs',7)
 
 print('Após baixado os DOEs, inicia a extração:\n')
