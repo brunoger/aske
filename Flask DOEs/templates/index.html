@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Busca de Publicações</title>
+</head>
+<body>
+    <h1>Buscar Publicações</h1>
+    <form action="/process_data" method="POST">
+        <label for="orgao">Órgão:</label>
+        <input type="text" id="orgao" name="orgao" required><br><br>
+        
+        <label for="periodo_inicio">Período Início:</label>
+        <input type="date" id="periodo_inicio" name="periodo_inicio" required><br><br>
+        
+        <label for="periodo_fim">Período Fim:</label>
+        <input type="date" id="periodo_fim" name="periodo_fim" required><br><br>
+        
+        <input type="submit" value="Buscar">
+    </form>
+</body>
+</html>
