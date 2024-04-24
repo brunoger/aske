@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Busca de Publicações</title>
+
+    <style>
+        /* Estilos para a animação de carregamento */
+        .progress-bar {
+            width: 100%;
+            background-color: #f3f3f3;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+        .progress-bar-fill {
+            height: 30px;
+            background-color: #3498db;
+            border-radius: 4px;
+            width: 0;
+            transition: width 0.5s ease-in-out; 
+        }
+    </style>
+</head>
+<body>
+    <h1>Buscar Publicações</h1>
+    <form id="searchForm" action="/process_data" method="POST" onsubmit="showLoader()">
+        <label for="orgao">Órgão:</label>
+        <input type="text" id="orgao" name="orgao" required><br><br>
+        
+        <label for="periodo_inicio">Período Início:</label>
+        <input type="date" id="periodo_inicio" name="periodo_inicio" required><br><br>
+        
+        <label for="periodo_fim">Período Fim:</label>
+        <input type="date" id="periodo_fim" name="periodo_fim" required><br><br>
+        
+        <input type="submit" value="Buscar">
+    </form>
+
+    <div class="progress-bar">
+        <div id="progressBarFill" class="progress-bar-fill"></div>
+    </div>
+
+    <script>
+        function showLoader() {
+            // Exibe a barra de progresso
+            document.querySelector('.progress-bar-fill').style.width = '0';
+            // Obtém o número total de documentos a serem processados
+            var totalDocs = document.querySelectorAll('input[type="submit"]').length;
+            // Define a largura da barra de progresso para cada documento processado
+            var progressWidth = 0;
+            var interval = setInterval(function() {
+                progressWidth += 100 / totalDocs;
+                document.querySelector('.progress-bar-fill').style.width = progressWidth + '%';
+                if (progressWidth >= 100) {
+                    clearInterval(interval);
+                }
+            }, 1000); // Atualiza a cada segundo (ajuste conforme necessário)
+        }
+    </script>
+</body>
+</html>
