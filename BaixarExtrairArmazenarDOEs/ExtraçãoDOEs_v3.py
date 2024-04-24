@@ -84,7 +84,8 @@ for P in pdfpasta:
 
 #Organizar os DOEs em pastas de acordo com seu dia
 for i in os.listdir('txt extraido'):
-  temp = i[0:10]
-  if os.path.exists(os.path.join('txt extraido',temp)) == False:
-    os.makedirs(os.path.join('txt extraido',temp))
-  os.rename(os.path.join('txt extraido',i),os.path.join(os.path.join('txt extraido',temp),i))
+  if(i.endswith('.txt'):
+    temp = i[0:10]
+    if os.path.exists(os.path.join('txt extraido',temp)) == False:
+      os.makedirs(os.path.join('txt extraido',temp))
+    os.rename(os.path.join('txt extraido',i),os.path.join(os.path.join('txt extraido',temp),i))
