@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultados</title>
+</head>
+<body>
+    <h1>Resultados</h1>
+
+    <h2>Arquivos TXT Criados:</h2>
+    <ul>
+        {% for arquivo in arquivos_criados %}
+            <li><a href="{{ url_for('ler_arquivo', data_arquivo=arquivo['data'], nome_arquivo=arquivo['titulo']) }}" target="_blank">{{ arquivo['titulo'] }}</a></li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
