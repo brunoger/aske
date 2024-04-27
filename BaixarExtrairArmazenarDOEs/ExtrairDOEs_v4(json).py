@@ -54,8 +54,7 @@ for P in pdfpasta:
     if(temp!=datachar+'-'+meschar+'-'+anochar):
       if(temp!=''):
         with open(os.path.join('json extraidos',temp+'.json'),'w') as write_file:
-          for L in range(0,len(listX)):
-            json.dump(listX, write_file, indent=4)
+          json.dump(listX, write_file, indent=4)
       temp=datachar+'-'+meschar+'-'+anochar
       listX = []
       X = {
@@ -101,7 +100,6 @@ for P in pdfpasta:
 
 if(temp!=''):
   with open(os.path.join('json extraidos',temp+'.json'),'w') as write_file:
-    for L in range(0,len(listX)):
-      json.dump(listX, write_file, indent=4)
+    json.dump(listX, write_file, indent=4)
 
 
