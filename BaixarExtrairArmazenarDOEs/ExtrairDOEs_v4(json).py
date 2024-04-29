@@ -41,6 +41,25 @@ for P in pdfpasta:
   elif(P.endswith('.pdf')):
     print('Documento '+P)
     z = 'DOEs/'+P
+    bloco = z
+    bloco = bloco.replace('DOEs/do','')
+    bloco = bloco.split('p')
+    bloco = bloco[0]
+    datachar = bloco[6:8]
+    meschar = bloco[4:6]
+    anochar = bloco[0:4]
+    if(temp!=datachar+'-'+meschar+'-'+anochar):
+      if(temp!=''):
+        with open(os.path.join('json extraidos',temp+'.json'),'w') as write_file:
+          json.dump(listX, write_file, indent=4)
+      temp=datachar+'-'+meschar+'-'+anochar
+      listX = []
+      X = {
+          'DATA',
+          'NOME',
+          'PUBLICACAO',
+          'TEXTO'
+          }
     listadocs.append(extrair_orgaos_PDF(z))
     listacontextos.append(extrair_texto_entre_orgaos(listadocs[-1]))
     #listanegrito.append(palavras_negrito(listacontextos[-1]))
