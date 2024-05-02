@@ -189,7 +189,7 @@ def extrair_dados(orgao, periodo_inicio, periodo_fim):
                         dados_json = json.load(arquivo_json)
                     for item in dados_json:
                         orgao_arquivo = item['NOME']
-                        if orgao_arquivo.strip() == orgao:
+                        if orgao_arquivo.strip() == orgao.upper():
                             arquivo = os.path.join(root, file)
                             # Verifica se o arquivo já foi adicionado
                             if arquivo not in arquivos_unicos:
@@ -268,7 +268,7 @@ def ler_arquivo(data_arquivo, nome_arquivo):
     
     # Procura pelo órgão na lista de dados do arquivo
     for item in dados_json:
-        if 'NOME' in item and item['NOME'] == orgao:
+        if 'NOME' in item and item['NOME'] == orgao.upper():
             if 'TEXTO' in item:
                 texto_orgao += f"Publicação {i} {item['TEXTO']}\n\n" # Adiciona o número da publicação antes de cada texto
                 i += 1  # Incrementa o contador de publicações
