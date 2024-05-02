@@ -51,7 +51,6 @@ for P in pdfpasta:
     caderno = caderno.replace('0','')
     caderno = caderno.replace('.','')
     caderno = int(caderno)
-    print(bloco,caderno)
     datachar = bloco[6:8]
     meschar = bloco[4:6]
     anochar = bloco[0:4]
