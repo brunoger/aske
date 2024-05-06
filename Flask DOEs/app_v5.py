@@ -154,7 +154,8 @@ def extrair_dados(orgao, periodo_inicio, periodo_fim):
                             'PUBLICACAO': 1,
                             'TEXTO': listaconteudos[-1][c].publicacao.texto
                         })
-
+            os.rename(os.path.join('DOEs',P),os.path.join('DOEsExtraidos',P))
+            
         if(temp!=''):
             with open(os.path.join('json extraidos',temp+'.json'),'w') as write_file:
                 json.dump(listX, write_file, indent=4)
@@ -266,7 +267,8 @@ def ler_arquivo(data_arquivo, nome_arquivo):
     for item in dados_json:
         if 'NOME' in item and item['NOME'] == orgao.upper():
             if 'TEXTO' in item:
-                texto_orgao += f"Publicação {i} {item['TEXTO']}\n\n" # Adiciona o número da publicação antes de cada texto
+                texto_orgao += f"Publicação {i} {item['TEXTO']}\n\n" + "\n\n" # Adiciona o número da publicação antes de cada texto
+                texto_orgao += "\n\n"
                 i += 1  # Incrementa o contador de publicações
     
     # Verifica se o conteúdo do arquivo é relevante para o órgão especificado
