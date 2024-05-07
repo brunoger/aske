@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Busca de Publicações</title>
+
+    <style>
+        /* Estilos para a barra de progresso */
+        .progress-bar {
+            width: 100%;
+            background-color: #f3f3f3;
+            border-radius: 4px;
+            margin-top: 20px;
+            display: none; /* Inicialmente esconde a barra de progresso */
+        }
+        .progress-bar-fill {
+            height: 30px;
+            background-color: #3498db;
+            border-radius: 4px;
+            width: 0;
+            transition: width 0.5s ease-in-out; 
+        }
+    </style>
+</head>
+<body>
+    <h1>Buscar Publicações</h1>
+    <form id="searchForm" action="/process_data" method="POST">
+        <label for="orgao">Órgão:</label>
+        <input type="text" id="orgao" name="orgao" required><br><br>
+        
+        <label for="periodo_inicio">Período Início:</label>
+        <input type="date" id="periodo_inicio" name="periodo_inicio" required><br><br>
+        
+        <label for="periodo_fim">Período Fim:</label>
+        <input type="date" id="periodo_fim" name="periodo_fim" required><br><br>
+        
+        <input type="submit" value="Buscar">
+    </form>
+
+    <div class="progress-bar">
+        <div id="progressBarFill" class="progress-bar-fill"></div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> <!-- jQuery para AJAX -->
+    <script>
+        $(document).ready(function() {
+            function showLoader() {
+                // Exibe a barra de progresso ao clicar em "Buscar"
+                document.querySelector('.progress-bar').style.display = 'block';
+                // Chama a função para atualizar a barra de progresso
+                atualizarBarraProgresso();
+                // Retorna false para evitar que o formulário seja enviado
+                return false;
+            }
+
+            // Função para atualizar a barra de progresso
+            function atualizarBarraProgresso() {
+                // Faz uma requisição AJAX para obter o progresso atual
+                fetch('/progresso')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Erro ao obter o progresso.');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Atualiza a largura da barra de progresso com base no progresso retornado pelo servidor
+                        var progresso = data.progresso * 100; // Multiplica por 100 para obter o valor em porcentagem
+                        document.querySelector('.progress-bar-fill').style.width = progresso + '%';
+                        console.log('Progresso atualizado:', progresso);
+                    })
+                    .catch(error => {
+                        console.error('Erro ao obter o progresso:', error);
+                    });
+            }
+
+            // Chama a função showLoader imediatamente após a página ser carregada
+            showLoader();
+
+            // Chama a função atualizarBarraProgresso a cada 1 segundo
+            setInterval(atualizarBarraProgresso, 1000);
+        });
+    </script>
+</body>
+</html>
