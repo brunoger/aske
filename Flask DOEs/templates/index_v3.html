@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Busca de Publicações</title>
+
+    <style>
+        /* Estilos para a barra de progresso */
+        .progress-bar {
+            width: 100%;
+            background-color: #f3f3f3;
+            border-radius: 4px;
+            margin-top: 20px;
+            display: none; /* Inicialmente esconde a barra de progresso */
+        }
+        .progress-bar-fill {
+            height: 30px;
+            background-color: #3498db;
+            border-radius: 4px;
+            width: 0;
+            transition: width 0.5s ease-in-out; 
+        }
+    </style>
+</head>
+<body>
+    <h1>Buscar Publicações</h1>
+    <form id="searchForm" action="/process_data" method="POST" onsubmit="return showLoader()">
+        <label for="orgao">Órgão:</label>
+        <input type="text" id="orgao" name="orgao" required><br><br>
+        
+        <label for="periodo_inicio">Período Início:</label>
+        <input type="date" id="periodo_inicio" name="periodo_inicio" required><br><br>
+        
+        <label for="periodo_fim">Período Fim:</label>
+        <input type="date" id="periodo_fim" name="periodo_fim" required><br><br>
+        
+        <input type="submit" value="Buscar">
+    </form>
+
+    <div class="progress-bar">
+        <div id="progressBarFill" class="progress-bar-fill"></div>
+    </div>
+
+    <script>
+        function showLoader() {
+            // Exibe a barra de progresso ao clicar em "Buscar"
+            document.querySelector('.progress-bar').style.display = 'block';
+            // Retorna true para permitir o envio do formulário
+            return true;
+        }
+    </script>
+</body>
+</html>
