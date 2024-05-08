@@ -104,8 +104,8 @@ def extrair_texto_entre_orgaos(lista):
               if('*** *** ***' in temp):
                 temp = temp.split('*** *** ***')
                 publicacoes.append(temp[0])
-              temp=''
-              publicacoes[-1] = Publicacao(publicacoes[-1],publicpage)
+                temp=''
+                publicacoes[-1] = Publicacao(publicacoes[-1],publicpage)
               publicpage=0
               y0=pagina.chars[c]['y0']
               page2=pagina.chars[c]['page_number']
