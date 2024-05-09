@@ -64,7 +64,7 @@ def extrair_dados(orgao, palavra, periodo_inicio, periodo_fim):
         os.makedirs('DOEsExtraidos')
     # Se a pasta existir, verifica se os DOEs buscados já foram extraídos, ou seja, se os arquivos já foram baixados e estão contidos na pasta
     else:
-        if(verificar_diarios_solicitados(periodo_inicio, periodo_fim) == False):
+        if(verificar_diarios_solicitados(periodo_inicio, periodo_fim) == False) and (os.path.exists('json extraidos') == False):
             Baixar_DOEs('DOEs', diferenca_dias, periodo_fim)
 
     # Pasta que guarda os .json
