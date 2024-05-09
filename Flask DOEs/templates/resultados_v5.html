@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultado da Busca</title>
+</head>
+<body>
+    <h1>Resultados</h1>
+
+    <h2>Arquivos JSON Criados:</h2>
+    <ul>
+        {% for arquivo in arquivos_criados %}
+            {% if orgao %}
+                <li><a href="{{ url_for('ler_arquivo', data_arquivo=arquivo['data'], nome_arquivo=arquivo['titulo']) }}?orgao={{ orgao }}" target="_blank">{{ arquivo['titulo'] }}</a></li>
+            {% elif palavra %}
+                <li><a href="{{ url_for('ler_arquivo', data_arquivo=arquivo['data'], nome_arquivo=arquivo['titulo']) }}?palavra={{ palavra }}" target="_blank">{{ arquivo['titulo'] }}</a></li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</body>
+</html>
