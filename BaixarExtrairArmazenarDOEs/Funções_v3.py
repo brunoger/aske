@@ -84,11 +84,14 @@ def extrair_texto_entre_orgaos(lista):
                   y1=pagina.chars[c]['y1']
                   page1=pagina.chars[c]['page_number']
                 temp=temp+pagina.chars[c]['text']
+                if(publicpage==0):
+                  publicpage = pagina.chars[c]['page_number']
                 if('*** *** ***' in temp):
                   temp = temp.split('*** *** ***')
                   publicacoes.append(temp[0])
                   temp=''
-                  publicacoes[-1] = Publicacao(publicacoes[-1],pagina.chars[c]['page_number'])
+                  publicacoes[-1] = Publicacao(publicacoes[-1],publicpage)
+                  publicpage=0
                 y0=pagina.chars[c]['y0']
                 page2=pagina.chars[c]['page_number']
             elif(pagina.chars[c]['page_number']>lista[l].page):
