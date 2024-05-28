@@ -11,17 +11,34 @@ app = Flask(__name__)
 def verificar_diarios_solicitados(periodo_inicio, periodo_fim):
     data_atual = periodo_inicio
     while data_atual <= periodo_fim:
-        # Converte a data atual para o formato YYYYMMDD
         data_atual_formatada = data_atual.strftime('%Y%m%d')
-        # Verifica se o Diário Oficial do Estado correspondente à data atual está presente na pasta 'DOEsExtraidos'
-        pdf_solicitado = f'do{data_atual_formatada}p01.pdf'
-        if os.path.exists(os.path.join('DOEsExtraidos', pdf_solicitado)):
-            # O DOE já foi extraído, prossiga para a próxima data
-            data_atual += timedelta(days=1)
-        else:
-            # O DOE não foi encontrado, portanto, retorna False
+        data_atual_formatada_json = data_atual.strftime('%d-%m-%Y')
+        
+        # Verifica se o arquivo JSON correspondente à data atual existe na pasta 'json extraidos'
+        json_folder = os.path.join('json extraidos', data_atual_formatada_json)
+        json_filepath = os.path.join(json_folder, f'{data_atual_formatada_json}.json')
+        if not os.path.exists(json_filepath):
             return False
-    # Todos os DOEs foram encontrados, retorna True
+        
+        # Verifica se os arquivos PDF correspondentes à data atual existem na pasta 'DOEsExtraidos'
+        pdf_presente = False
+        i = 1
+        while True:
+            pdf_filepath = os.path.join('DOEsExtraidos', f'do{data_atual_formatada}p{i:02d}.pdf')
+            if os.path.exists(pdf_filepath):
+                pdf_presente = True
+                i += 1
+            else:
+                break
+        
+        # Se o arquivo PDF não estiver presente para a data atual, retorna False
+        if not pdf_presente:
+            return False
+        
+        # Passa para o próximo dia
+        data_atual += timedelta(days=1)
+    
+    # Se todos os arquivos PDF e JSON estiverem presentes para cada dia, retorna True
     return True
 
 # Função para verificar se uma palavra está presente no texto
@@ -55,20 +72,18 @@ def extrair_dados(orgao, palavra, periodo_inicio, periodo_fim):
     # Calcula a diferença de dias entre o período de início e o período de fim
     diferenca_dias = (periodo_fim - periodo_inicio).days
 
-    # Verifica se a pasta 'DOEsExtraidos' existe ou não, caso não exista, cria a pasta
-    if not os.path.exists('DOEsExtraidos'):
-        os.makedirs('DOEsExtraidos')
-
-    # Verifica se a pasta 'json extraidos' existe ou não, caso não exista, cria a pasta
-    if not os.path.exists('json extraidos'):
-        os.makedirs('json extraidos')
-
-    # Verifica se os DOEs solicitados já foram extraídos, ou seja, se os arquivos já foram baixados e estão contidos na pasta
-    if not verificar_diarios_solicitados(periodo_inicio, periodo_fim):
-        # Baixa os DOEs solicitados se ainda não tiverem sido extraídos
+    # Verifica se os DOEs solicitados já foram extraídos e estão presentes na pasta 'json extraidos'
+    if verificar_diarios_solicitados(periodo_inicio, periodo_fim):
+        print('O(s) DOE(s) solicitado(s) já foram extraídos e estão presentes na pasta "json extraidos".')
+        
+    else:
+        print('O(s) DOE(s) solicitado(s) ainda não foram extraídos.')
+        # Baixa os DOEs solicitados para a pasta 'DOEs'
         Baixar_DOEs('DOEs', diferenca_dias, periodo_fim)
+        print('DOE(s) baixado(s) com sucesso para a pasta "DOEs".')
+        # Você pode adicionar uma lógica aqui para extrair e converter os DOEs em arquivos JSON na pasta 'json extraidos'
 
-    print('Após baixado os DOEs, inicia a extração e o armazenamento, caso ainda não tenha sido feito:\n')
+    print('Após baixado o(s) DOE(s), inicia a extração e o armazenamento, caso ainda não tenha sido feito:\n')
 
     # Essa parte faz toda a extração de órgãos e conteúdo dos documentos baixados
     listadocs = []
@@ -92,6 +107,30 @@ def extrair_dados(orgao, palavra, periodo_inicio, periodo_fim):
     contador_arquivos = 0  # Inicializa o contador de arquivos processados
 
     for P in pdfpasta:
+        data_arquivo_str = P[2:10]
+        try:
+            data_arquivo_dt = datetime.strptime(data_arquivo_str, '%Y%m%d')
+        except ValueError as e:
+            print(f"Erro ao converter data no arquivo {P}: {e}")
+            continue
+
+        if not (periodo_inicio <= data_arquivo_dt <= periodo_fim):
+            print(f"Arquivo {P} fora do período solicitado.")
+            continue
+
+        json_filename = f'{data_arquivo_dt.strftime("%d-%m-%Y")}.json'
+        json_folder = os.path.join('json extraidos', data_arquivo_dt.strftime('%d-%m-%Y'))
+        json_filepath = os.path.join(json_folder, json_filename)
+        data_atual_formatada = data_arquivo_dt.strftime('%Y%m%d')  # Definir data_atual_formatada antes de usar
+        if os.path.exists(json_filepath):
+            print(f"Arquivo JSON {json_filename} já existe.")
+            print(f"Arquivo JSON {json_filename} já existe.")
+            # Remoção dos arquivos PDF correspondentes da pasta 'DOEs/' após a extração do JSON
+            for i in range(1, 8):
+                pdf_filepath = os.path.join('DOEs', f'do{data_atual_formatada}p{i:02d}.pdf')
+                if os.path.exists(pdf_filepath):
+                    os.remove(pdf_filepath)
+            continue
         if(os.path.exists(os.path.join('DOEsExtraidos',P))):
             print(P+' Documento já utilizado')
             os.remove(os.path.join('DOEs',P))
@@ -110,11 +149,13 @@ def extrair_dados(orgao, palavra, periodo_inicio, periodo_fim):
             meschar = bloco[4:6]
             anochar = bloco[0:4]
 
-            if(temp!=datachar+'-'+meschar+'-'+anochar):
-                if(temp!=''):
-                    with open(os.path.join('json extraidos',temp+'.json'),'w') as write_file:
+            if temp != datachar + '-' + meschar + '-' + anochar:
+                if temp != '':
+                    if not os.path.exists(json_folder):
+                        os.makedirs(json_folder)
+                    with open(json_filepath, 'w') as write_file:
                         json.dump(listX, write_file, indent=4)
-                temp=datachar+'-'+meschar+'-'+anochar
+                temp = datachar + '-' + meschar + '-' + anochar
                 listX = []
                 X = {
                     'DATA',
@@ -152,8 +193,10 @@ def extrair_dados(orgao, palavra, periodo_inicio, periodo_fim):
 
             os.rename(os.path.join('DOEs', P), os.path.join('DOEsExtraidos', P))
 
-        if(temp!=''):
-            with open(os.path.join('json extraidos',temp+'.json'),'w') as write_file:
+        if temp != '':
+            if not os.path.exists(json_folder):
+                os.makedirs(json_folder)
+            with open(json_filepath, 'w') as write_file:
                 json.dump(listX, write_file, indent=4)
 
         # Atualiza a barra de progresso com base no número total de arquivos
@@ -177,8 +220,13 @@ def extrair_dados(orgao, palavra, periodo_inicio, periodo_fim):
     for root, _, files in os.walk('json extraidos'):
         for file in files:
             if file.endswith('.json'):
-                data_arquivo = root.split('/')[1]
-                data_arquivo_dt = datetime.strptime(data_arquivo, '%d-%m-%Y')
+                data_arquivo = os.path.basename(root)
+                try:
+                    data_arquivo_dt = datetime.strptime(data_arquivo, '%d-%m-%Y')
+                except ValueError as e:
+                    print(f"Erro ao converter data no caminho {root}: {e}")
+                    continue
+
                 if periodo_inicio <= data_arquivo_dt <= periodo_fim:
                     caminho_arquivo = os.path.join(root, file)
                     try:
@@ -186,22 +234,18 @@ def extrair_dados(orgao, palavra, periodo_inicio, periodo_fim):
                             dados_json = json.load(arquivo_json)
                             for item in dados_json:
                                 orgao_arquivo = item['NOME']
-                                if orgao_arquivo.strip() in orgao.upper():
+                                if orgao_arquivo.strip().upper() in orgao.upper():
                                     arquivo = os.path.join(root, file)
                                     if arquivo not in arquivos_unicos:
                                         arquivos_criados.append({'titulo': file, 'data': data_arquivo})
                                         arquivos_unicos.add(arquivo)
-                                        print("Arquivo adicionado à lista:", file)
                                 elif 'TEXTO' in item and verificar_palavra(item['TEXTO'], palavra):
                                     arquivo = os.path.join(root, file)
                                     if arquivo not in arquivos_unicos:
                                         arquivos_criados.append({'titulo': file, 'data': data_arquivo})
                                         arquivos_unicos.add(arquivo)
-                                        print("Arquivo adicionado à lista:", file)
                     except Exception as e:
                         print(f"Erro ao abrir o arquivo {caminho_arquivo}: {e}")
-
-    print("Lista de arquivos criados:", arquivos_criados)
 
     return arquivos_criados
 
@@ -216,25 +260,9 @@ def index():
     if not os.path.exists('DOEsExtraidos'):
         os.makedirs('DOEsExtraidos')  # Cria a pasta 'DOEsExtraidos'
 
-    # Verifica se existe algum PDF na pasta 'DOEsExtraidos'
-    pdfs_extraidos = [f for f in os.listdir('DOEsExtraidos') if f.endswith('.pdf')]
-
-    # Se a pasta 'DOEsExtraidos' estiver vazia ou não existir
-    if not pdfs_extraidos:
-        # Obtém os períodos de início e fim da página index.html
-        periodo_inicio = request.args.get('periodo_inicio')
-        periodo_fim = request.args.get('periodo_fim')
-
-        # Verifica se os períodos de início e fim foram fornecidos
-        if periodo_inicio and periodo_fim:
-            periodo_inicio_dt = datetime.strptime(periodo_inicio, '%Y-%m-%d')
-            periodo_fim_dt = datetime.strptime(periodo_fim, '%Y-%m-%d')
-
-            # Calcula a diferença de dias entre o período de início e o período de fim
-            diferenca_dias = (periodo_fim_dt - periodo_inicio_dt).days
-
-            # Baixa os DOEs solicitados
-            Baixar_DOEs('DOEs', diferenca_dias, periodo_fim_dt)
+    # Verifica se a pasta 'json extraidos' já existe
+    if not os.path.exists('json extraidos'):
+        os.makedirs('json extraidos')  # Cria a pasta 'json extraidos'
 
     return render_template('index.html')
 
