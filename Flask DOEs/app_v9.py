@@ -77,11 +77,8 @@ def extrair_dados(orgao, palavra, periodo_inicio, periodo_fim):
         print('O(s) DOE(s) solicitado(s) já foram extraídos e estão presentes na pasta "json extraidos".')
         
     else:
-        print('O(s) DOE(s) solicitado(s) ainda não foram extraídos.')
         # Baixa os DOEs solicitados para a pasta 'DOEs'
         Baixar_DOEs('DOEs', diferenca_dias, periodo_fim)
-        print('DOE(s) baixado(s) com sucesso para a pasta "DOEs".')
-        # Você pode adicionar uma lógica aqui para extrair e converter os DOEs em arquivos JSON na pasta 'json extraidos'
 
     print('Após baixado o(s) DOE(s), inicia a extração e o armazenamento, caso ainda não tenha sido feito:\n')
 
