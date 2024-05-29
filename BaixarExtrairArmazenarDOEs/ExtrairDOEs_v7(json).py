@@ -1,6 +1,6 @@
 import os
 import json
-from Funções_v3 import *
+from Funções_v4 import *
 from DownloadDOEs import *
 
 print('\nInício do código\n')
