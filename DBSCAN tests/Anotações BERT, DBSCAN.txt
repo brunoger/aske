@@ -1,0 +1,55 @@
+10/05/2024 - 18/06/2024
+11032 publicações
+_______________________________________________
+*eps=0.1, min_samples=5, metric='cosine'
+
+52 clusters usando só órgãos
+7 classificado como ruído
+coeficiente de silhueta(órgãos): 0.870537
+
+213 clusters usando só destaques
+6099 classificado como ruído
+coeficiente de silhueta(destaques): -0.036472
+
+244 clusters usando órgao e destaque
+4856 classificado como ruído
+coeficiente de silhueta(órgãodestaque): 0.029950
+_________________________________________________
+*eps=0.25,min_samples=5, metric='cosine'
+
+4 clusters usando só órgãos
+0 classificado como ruído
+coeficiente de silhueta: 0.095228
+
+4 clusters usando só destaques
+223 classificado como ruído
+coeficiente de silhueta: -0.010238
+
+3 clusters usando órgão e destaque
+206 classificado como ruído
+coeficiente de silhueta: 0.527771
+__________________________________________________
+*eps=0.1,min_samples=10, metric='cosine'
+
+50 clusters usando só órgãos
+23 classificado como ruído
+coeficiente de silhueta: 0.868769
+
+94 clusters usando só destaques
+7365 classificado como ruído
+coeficiente de silhueta: -0.085005
+
+123 clusters usando órgãos e destaques
+6174 classificado como ruído
+coeficiente de silhueta: -0.015256
+__________________________________________________
+*eps=0.25,min_samples=10, metric='cosine'
+
+4 clusters usando só órgãos
+0 classificado como ruído
+coeficiente de silhueta: 0.095228
+
+2 clusters usando só destaques
+309 classificado como ruído
+coeficiente de silhueta: 0.571446
+
